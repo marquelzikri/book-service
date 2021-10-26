@@ -3,6 +3,8 @@ import path from 'path';
 import fastify from 'fastify';
 import now from 'fastify-now';
 
+import prismaPlugin from './plugins/prisma';
+
 // Load env vars
 import loadConfig from '@lib/config';
 loadConfig();
@@ -13,6 +15,8 @@ export async function createServer() {
       level: process.env.LOG_LEVEL,
     },
   });
+
+  server.register(prismaPlugin);
 
   server.register(now, {
     routesFolder: path.join(__dirname, './routes'),
