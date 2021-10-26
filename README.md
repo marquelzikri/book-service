@@ -16,6 +16,9 @@ npm install
 npm run dev
 ```
 
+## Postman examples
+You can use these REST request examples at Postman, just import [this JSON file](https://github.com/marquelzikri/book-service/blob/master/book-service.postman_collection.json) to your Postman.
+
 ## File Based Routing
 
 Using [fastify-now](https://github.com/yonathan06/fastify-now) for file based routing
