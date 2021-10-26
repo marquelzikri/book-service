@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["es2020"],
+    "lib": ["esnext"],
     "module": "commonjs",
     "target": "es2020",
     "esModuleInterop": true,
@@ -13,7 +13,8 @@
     "baseUrl": "src",
     "paths": {
       "@lib/*": ["lib/*"]
-    }
+    },
+    "resolveJsonModule": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
