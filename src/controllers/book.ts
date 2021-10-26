@@ -44,8 +44,14 @@ async function getBooksId(args: {
   const bookId = req.params.id ? parseInt(req.params.id) : null;
 
   // filter by number of pages
-  const minimumPage = req.query.minimum ? parseInt(req.query.minimum) : null;
-  const maximumPage = req.query.maximum ? parseInt(req.query.maximum) : null;
+  let minimumPage = req.query.minimum ? parseInt(req.query.minimum) : null;
+  let maximumPage = req.query.maximum ? parseInt(req.query.maximum) : null;
+  let pageQuery: {gt?: number, gte?: number, lt?: number, lte?: number} = { gte: minimumPage, lte: maximumPage };
+
+  if (req.query.interval) {
+    [minimumPage, maximumPage] = req.query.interval.substr(1, req.query.interval.length - 2).split(',').map(i => parseInt(i));
+    if (req.query.interval[0] === '[') pageQuery = { gt: minimumPage, lt: maximumPage };
+  }
 
   try {
     if (bookId) {
@@ -61,13 +67,14 @@ async function getBooksId(args: {
         where: {
           ...(authors ? { authors: { every: { id: { in: authors } } } } : {}),
           ...(years ? { year: { in: years } } : {}),
-          ...(minimumPage && maximumPage ? { pages: { gte: minimumPage, lte: maximumPage } } : {})
+          ...(minimumPage && maximumPage ? { pages: pageQuery } : {})
         },
         orderBy: {
           id: 'asc',
         },
         select: {
-          id: true
+          id: true,
+          pages: true,
         },
         ...getPagination(req.query.page, req.query.pageSize),
       });
