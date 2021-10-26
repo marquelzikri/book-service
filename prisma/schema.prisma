@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Author {
+  id        Int              @id @default(autoincrement())
+  bio       String?
+  name      String
+  countries Int[]
+  gender    String
+  wikipedia Wikipedia?       @relation(fields: [wikipediaId], references: [id])
+  nBooks    Int?             @map("n_books")
+  summary   String?
+  born      DateTime?
+  books     Book[]
+  died      DateTime?
+
+  wikipediaId Int?
+  @@map("authors")
+}
+
+model Book {
+  id               Int              @id @default(autoincrement())
+  contentName      String?
+  isbn             String?
+  originalTitle    String?
+  year             Int?
+  authorName       String?
+  imagesUrls       String[]
+  languageCode     String?
+  images           String[]
+  category         String?
+  plot             String?
+  genres           String[]
+  copyright        String?
+  title            String?
+  wikipedia        Wikipedia?       @relation(fields: [wikipediaId], references: [id])
+  averageRating    Int?
+  ratingCount      Int?
+  goodreads        Goodreads?       @relation(fields: [goodreadsId], references: [id])
+  similarBooks     String[]
+  description      String?
+  locClass         String?
+  gutenberg        Gutenberg?       @relation(fields: [gutenbergId], references: [id])
+  authors          Author[]
+  pages            Int?
+  language         String?
+  isbn13           String?
+  countries        Int[]
+  releaseDate      DateTime?
+  author           Int?
+  cover            String?
+  summary          String?
+  contentCleaned   Boolean?
+  classes          String[]
+  contentAvailable Boolean?
+  nAuthors         Int?
+
+  wikipediaId Int?
+  goodreadsId Int?
+  gutenbergId Int?
+  @@map("books")
+}
+
+model Wikipedia {
+  id    Int      @id @default(autoincrement())
+  url   String?
+  found Boolean?
+
+  Author Author[]
+  Book   Book[]
+  @@map("wikipedia_links")
+}
+
+model Goodreads {
+  id    Int      @id @default(autoincrement())
+  url   String?
+  found Boolean?
+  year  Int?
+
+  Book Book[]
+  @@map("goodreads_links")
+}
+
+model Gutenberg {
+  id  Int     @id @default(autoincrement())
+  url String?
+  num Int?
+
+  Book Book[]
+  @@map("gutenberg_links")
+}
